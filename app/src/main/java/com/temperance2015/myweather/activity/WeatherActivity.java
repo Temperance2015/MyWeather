@@ -1,10 +1,13 @@
 package com.temperance2015.myweather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.view.View.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Window;
@@ -19,8 +22,10 @@ import com.temperance2015.myweather.util.Utility;
 /**
  * Created by Isabel on 2015/9/23.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener {
 
+    private Button switchCity;
+    private Button refreshWeather;
     private LinearLayout weatherInfoLayout;
     private TextView cityNameText;
     private TextView publishText;
@@ -41,6 +46,10 @@ public class WeatherActivity extends Activity {
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
         currentDateText = (TextView) findViewById(R.id.current_date);
+        switchCity = (Button) findViewById(R.id.switch_city);
+        refreshWeather = (Button) findViewById(R.id.refresh_weather);
+        switchCity.setOnClickListener(this);
+        refreshWeather.setOnClickListener(this);
         String countyCode = getIntent().getStringExtra("county_code");
         if (!TextUtils.isEmpty(countyCode)){
             //有县级代号时查询天气
@@ -58,14 +67,14 @@ public class WeatherActivity extends Activity {
     private void queryWeatherCode(String countyCode){
         String address = "http://www.weather.com.cn/data/list3/city"+countyCode+".xml";
         queryFromServer(address,"countyCode");
-        Toast.makeText(this, "查询县级代号对应的天气代号", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "查询县级代号对应的天气代号", Toast.LENGTH_SHORT).show();
     }
 
     //查询天气代号对应的天气
     private void queryWeatherInfo(String weatherCode){
         String address = "http://www.weather.com.cn/data/cityinfo/"+weatherCode+".html";
         queryFromServer(address,"weatherCode");
-        Toast.makeText(this, "查询天气代号对应的天气", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "查询天气代号对应的天气", Toast.LENGTH_SHORT).show();
     }
 
     private void queryFromServer(final String address,final String type){
@@ -115,5 +124,27 @@ public class WeatherActivity extends Activity {
         currentDateText.setText(prefs.getString("current_date",""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v){
+        switch (v.getId()){
+            case R.id.switch_city:
+                Intent intent = new Intent(this,ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity", true);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.refresh_weather:
+                publishText.setText("同步中...");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = prefs.getString("weather_code","");
+                if (!TextUtils.isEmpty(weatherCode)){
+                    queryWeatherInfo(weatherCode);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
