@@ -23,10 +23,10 @@ public class MyWeatherOpenHelper extends SQLiteOpenHelper {
             + "province_id integer)";
 
     //country建表
-    public static final String CREATE_COUNTY = "create table Country ("
+    public static final String CREATE_COUNTY = "create table County ("
             + "id integer primary key autoincrement, "
-            + "country_name text, "
-            + "country_code text, "
+            + "county_name text, "
+            + "county_code text, "
             + "city_id integer)";
 
     public MyWeatherOpenHelper(Context context,String name,SQLiteDatabase.CursorFactory factory,int version){
