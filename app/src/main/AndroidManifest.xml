@@ -20,6 +20,9 @@
         <activity android:name="com.temperance2015.myweather.activity.WeatherActivity">
         </activity>
 
+        <service android:name="com.temperance2015.myweather.service.AutoUpdateService"></service>
+        <receiver android:name="com.temperance2015.myweather.receiver.AutoUpdateReceiver"></receiver>
+
     </application>
 
 </manifest>
