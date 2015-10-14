@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.temperance2015.myweather.util.HttpCallbackListener;
 import com.temperance2015.myweather.util.HttpUtil;
@@ -37,7 +38,14 @@ public class AutoUpdateService extends Service {
         Intent i = new Intent(this,AutoUpdateService.class);
         PendingIntent pi = PendingIntent.getBroadcast(this,0,i,0);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+        Log.d("AutoUpdateService","onStartCommand executed");
         return super.onStartCommand(intent,flags,startId);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d("AutoUpdateService","onDestroy executed");
     }
 
     //更新天气信息

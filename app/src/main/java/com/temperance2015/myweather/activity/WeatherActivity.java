@@ -2,6 +2,7 @@ package com.temperance2015.myweather.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Window;
 import android.view.View;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.temperance2015.myweather.R;
@@ -125,8 +127,31 @@ public class WeatherActivity extends Activity implements OnClickListener {
         currentDateText.setText(prefs.getString("current_date", ""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.auto_update:
+                Intent startIntent = new Intent(this,AutoUpdateService.class);
+                startService(startIntent);
+                Toast.makeText(this,"自动更新已启动",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.stop_auto_update:
+                Intent stopIntent = new Intent(this,AutoUpdateService.class);
+                stopService(stopIntent);
+                Toast.makeText(this,"自动更新已停止",Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
