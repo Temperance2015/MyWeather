@@ -1,6 +1,8 @@
 package com.temperance2015.myweather.activity;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View.OnClickListener;
@@ -129,6 +131,21 @@ public class WeatherActivity extends Activity implements OnClickListener {
         cityNameText.setVisibility(View.VISIBLE);
     }
 
+    public void sendNotification(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        Notification.Builder notification = new Notification.Builder(this);
+        notification.setAutoCancel(false);
+        notification.setContentTitle(prefs.getString("city_name", ""));
+        notification.setContentText("今天"+prefs.getString("temp1", "") + "~" + prefs.getString("temp2", "") + prefs.getString("weather_desp", ""));
+        notification.setWhen(System.currentTimeMillis());
+        notification.setTicker(prefs.getString("city_name", "") + prefs.getString("weather_desp", ""));
+        //天气小图标待设
+        notification.setSmallIcon(R.mipmap.ic_launcher);
+        notification.setPriority(Notification.PRIORITY_DEFAULT);
+        manager.notify(1,notification.build());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -147,6 +164,9 @@ public class WeatherActivity extends Activity implements OnClickListener {
                 Intent stopIntent = new Intent(this,AutoUpdateService.class);
                 stopService(stopIntent);
                 Toast.makeText(this,"自动更新已停止",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.start_notification:
+                sendNotification();
                 break;
             default:
                 break;

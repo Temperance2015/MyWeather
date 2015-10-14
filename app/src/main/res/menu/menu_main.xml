@@ -7,4 +7,8 @@
         android:id="@+id/stop_auto_update"
         android:title="停止自动更新"/>
 
+    <item
+        android:id="@+id/start_notification"
+        android:title="启用状态栏天气"/>
+
 </menu>
